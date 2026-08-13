@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUBG Total Leaderboard — IT E-SPORT 2026</title>
+<meta name="description" content="ตารางคะแนนรวม PUBG PC IT E-SPORT 2026 รวม Group A และ Group B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="header-badge">IT E-SPORT · QUALIFIED DAY 1–2</div>
+    <h1>Total Leaderboard 2026</h1>
+    <div class="header-sub" id="header-sub">PUBG PC — รวมคะแนน Day1 + Day2 (Match1 + Match2)</div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Group selector">
+    <button class="tab-btn" id="tab-A" role="tab" aria-selected="false" onclick="renderLeaderboard('A')">Group A</button>
+    <button class="tab-btn" id="tab-B" role="tab" aria-selected="false" onclick="renderLeaderboard('B')">Group B</button>
+    <button class="tab-btn" id="tab-ALL" role="tab" aria-selected="false" onclick="renderLeaderboard('ALL')">🏅 Overall (ทุกกลุ่ม)</button>
+  </nav>
+
+  <section class="podium" id="podium-container" aria-label="Top 3 teams">
+    <!-- Injected by JS -->
+  </section>
+
+  <div class="section-title" id="table-title">ตารางคะแนนรวม</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="num">RANK</th>
+          <th class="align-left">TEAM</th>
+          <th class="num">DAY1</th>
+          <th class="num">D2-M1</th>
+          <th class="num">D2-M2</th>
+          <th class="num">KILLS</th>
+          <th class="num">TOTAL</th>
+        </tr>
+      </thead>
+      <tbody id="lb-body"></tbody>
+    </table>
+  </div>
+
+  <p class="note">
+    * <strong>TOTAL</strong> = คะแนน Day1 + คะแนน Day2 Match1 + คะแนน Day2 Match2<br>
+    * กรณีคะแนนเท่ากัน ใช้ <strong>Tie-breaker ข้อ 1</strong>: เปรียบเทียบคะแนนสังหารรวม (Kill Points) ที่มากกว่า<br>
+    * หากยังเท่ากัน → Best Placement ในแมตช์สุดท้าย → จำนวน Chicken Dinner
+  </p>
+
+  <div class="section-title">กติกาการนับคะแนน</div>
+  <div class="rules">
+    <div class="rule-box">
+      <h3>3.1 คะแนนการสังหาร (Kill Points)</h3>
+      <span class="kill-rule">1 Kill = 1 คะแนน</span>
+      <h3 style="margin-top:18px;">Tie-breaker (กรณีคะแนนเท่ากัน)</h3>
+      <ol class="tiebreak-list">
+        <li>ทีมที่ Kill Points รวมมากกว่า <span class="tie-tag">ข้อ 1</span></li>
+        <li>Best Placement ในเกมสุดท้าย <span class="tie-tag">ข้อ 2</span></li>
+        <li>จำนวน Chicken Dinner มากกว่า <span class="tie-tag">ข้อ 3</span></li>
+      </ol>
+    </div>
+    <div class="rule-box">
+      <h3>3.2 คะแนนอันดับ (Placement Points)</h3>
+      <table class="rule-table">
+        <tr><th>อันดับ</th><th>คะแนน</th></tr>
+        <tr><td>🥇 อันดับ 1 (Chicken Dinner)</td><td>10</td></tr>
+        <tr><td>อันดับ 2</td><td>6</td></tr>
+        <tr><td>อันดับ 3</td><td>5</td></tr>
+        <tr><td>อันดับ 4</td><td>4</td></tr>
+        <tr><td>อันดับ 5</td><td>3</td></tr>
+        <tr><td>อันดับ 6</td><td>2</td></tr>
+        <tr><td>อันดับ 7–8</td><td>1</td></tr>
+        <tr><td>อันดับ 9+</td><td>0</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <span>IT E-SPORT 2026 · Group A &amp; Group B · PUBG PC</span><br>
+    <span style="opacity:.5;font-size:11px;">สรุปคะแนนจาก Match Leaderboard Day1 + Day2 (Match1, Match2)</span>
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
