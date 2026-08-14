@@ -1,6 +1,6 @@
 /**
  * app.js – Leaderboard rendering logic
- * IT E-SPORT 2026 · PUBG PC
+ * IT E-SPORT 2026 · PUBG PC · Day1-3
  */
 
 /* ── Helpers ─────────────────────────────────────────────── */
@@ -17,12 +17,13 @@ function getDataset(group) {
   );
 }
 
-/** Check if two adjacent rows are actually tie-broken */
+/** Check if this row was actually tie-broken vs the row above */
 function isTieBreak(sorted, idx) {
   if (idx === 0) return false;
   const prev = sorted[idx - 1];
   const curr = sorted[idx];
-  return prev.total === curr.total;
+  // Same total but different kills = tie-break applied
+  return prev.total === curr.total && prev.kills !== curr.kills;
 }
 
 /* ── Render ──────────────────────────────────────────────── */
@@ -40,17 +41,17 @@ function renderLeaderboard(group) {
 
   // --- Header subtitle ---
   const subMap = {
-    A:   'GROUP A · PUBG PC — รวมคะแนน Day1 + Day2 (Match1 + Match2)',
-    B:   'GROUP B · PUBG PC — รวมคะแนน Day1 + Day2 (Match1 + Match2)',
-    ALL: 'OVERALL · PUBG PC — รวมคะแนนทุกกลุ่ม Day1 + Day2 (Match1 + Match2)',
+    A:   'GROUP A · PUBG PC — คะแนนสะสม Qualified Day1-3',
+    B:   'GROUP B · PUBG PC — คะแนนสะสม Qualified Day1-3',
+    ALL: 'OVERALL · PUBG PC — คะแนนสะสมรวมทุกกลุ่ม Qualified Day1-3',
   };
   document.getElementById('header-sub').textContent = subMap[group];
 
   // --- Table title ---
   const titleMap = {
-    A:   'ตารางคะแนนรวม Group A (Day1 + D2-Match1 + D2-Match2)',
-    B:   'ตารางคะแนนรวม Group B (Day1 + D2-Match1 + D2-Match2)',
-    ALL: 'ตารางคะแนนรวม Overall ทุกกลุ่ม',
+    A:   'ตารางคะแนนสะสม Group A (Qualified Day1-3)',
+    B:   'ตารางคะแนนสะสม Group B (Qualified Day1-3)',
+    ALL: 'ตารางคะแนนสะสม Overall ทุกกลุ่ม (Qualified Day1-3)',
   };
   document.getElementById('table-title').textContent = titleMap[group];
 
@@ -59,7 +60,6 @@ function renderLeaderboard(group) {
   podium.innerHTML = '';
 
   if (data.length >= 3) {
-    // Display order: 2nd (left), 1st (center, elevated), 3rd (right)
     const displayOrder = [
       { d: data[1], cls: 'silver', rank: '🥈 อันดับ 2' },
       { d: data[0], cls: 'gold',   rank: '🏆 อันดับ 1' },
@@ -75,7 +75,7 @@ function renderLeaderboard(group) {
         <div class="p-rank">${rank}</div>
         <div class="p-team">${d.team}</div>
         <div class="p-total">${d.total}</div>
-        <div class="p-pts">คะแนนรวม</div>
+        <div class="p-pts">คะแนนรวม (Placement + Kills)</div>
         ${groupLabel}
       `;
       podium.appendChild(card);
@@ -87,7 +87,7 @@ function renderLeaderboard(group) {
   tbody.innerHTML = '';
 
   data.forEach((d, i) => {
-    const rank  = i + 1;
+    const rank    = i + 1;
     const rankCls = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
     const groupTag = group === 'ALL'
       ? `<span class="group-tag">Group ${d.group}</span>` : '';
@@ -99,9 +99,7 @@ function renderLeaderboard(group) {
     tr.innerHTML = `
       <td class="num rank-cell">#${rank}</td>
       <td class="team-cell">${d.team}${groupTag}${tieTag}</td>
-      <td class="num">${d.day1}</td>
-      <td class="num">${d.m1}</td>
-      <td class="num">${d.m2}</td>
+      <td class="num">${d.placement}</td>
       <td class="num">${d.kills}</td>
       <td class="num total-cell">${d.total}</td>
     `;
@@ -111,10 +109,9 @@ function renderLeaderboard(group) {
 
 /* ── Init ────────────────────────────────────────────────── */
 
-// Read ?group=A|B|ALL from URL, default to B
 (function init() {
   const params = new URLSearchParams(window.location.search);
   const g = (['A', 'B', 'ALL'].includes(params.get('group')))
-    ? params.get('group') : 'B';
+    ? params.get('group') : 'A';
   renderLeaderboard(g);
 })();
