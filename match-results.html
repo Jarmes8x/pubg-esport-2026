@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Leaderboard — IT E-SPORT 2026</title>
+<meta name="description" content="ตารางคะแนนรวม 3 แมตช์ IT E-SPORT 2026 แบ่งตามทีม">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #06081a;
+  --card:   rgba(255,255,255,0.03);
+  --accent: #3b5bff;
+  --glow:   rgba(59,91,255,0.3);
+  --gold:   #ffd447;
+  --silver: #cfd8ff;
+  --bronze: #e5a35a;
+  --line:   rgba(255,255,255,0.08);
+  --muted:  #8b94c4;
+  --r:      10px;
+
+  /* Per-match accent colors */
+  --m1: #3b5bff;
+  --m2: #a259ff;
+  --m3: #ff6b35;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -10%, #1a2870 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, #0d1650 0%, transparent 60%),
+    var(--bg);
+  color: #fff;
+  min-height: 100vh;
+  padding: 36px 16px 72px;
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; }
+
+/* ── Header ── */
+header { text-align: center; margin-bottom: 36px; }
+.badge {
+  display: inline-block;
+  background: #fff;
+  color: #06081a;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 4px 16px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(28px, 6vw, 50px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(100deg, #fff 30%, #7b93ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
+}
+.header-sub { color: var(--muted); font-size: 14px; }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.tab-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line);
+  color: #c0c8f0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: all .18s;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.09); transform: translateY(-2px); }
+.tab-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--glow);
+  transform: translateY(-2px);
+}
+.tab-btn.m1.active { background: var(--m1); border-color: var(--m1); box-shadow: 0 4px 20px rgba(59,91,255,0.4); }
+.tab-btn.m2.active { background: var(--m2); border-color: var(--m2); box-shadow: 0 4px 20px rgba(162,89,255,0.4); }
+.tab-btn.m3.active { background: var(--m3); border-color: var(--m3); box-shadow: 0 4px 20px rgba(255,107,53,0.4); }
+
+/* ── Podium ── */
+.podium {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.p-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 22px;
+  min-width: 160px;
+  text-align: center;
+  transition: transform .2s;
+}
+.p-card:hover { transform: translateY(-4px); }
+.p-card.gold   { order:2; transform:translateY(-14px); border-color:rgba(255,212,71,.4); box-shadow:0 0 36px rgba(255,212,71,.15); }
+.p-card.gold:hover { transform:translateY(-18px); }
+.p-card.silver { order:1; }
+.p-card.bronze { order:3; }
+.p-rank  { font-size: 11px; color: var(--muted); letter-spacing: 2px; margin-bottom: 6px; }
+.p-name  { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+.p-pts   { font-size: 28px; font-weight: 900; }
+.p-card.gold   .p-pts { color: var(--gold); }
+.p-card.silver .p-pts { color: var(--silver); }
+.p-card.bronze .p-pts { color: var(--bronze); }
+.p-sub   { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* ── Section title ── */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #cfd6ff;
+  margin: 0 0 14px;
+}
+.section-title::before {
+  content: "";
+  display: inline-block;
+  width: 5px; height: 20px;
+  background: var(--accent);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── Table ── */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  background: var(--card);
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+thead th {
+  background: #fff;
+  color: #06081a;
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+thead th.align-left { text-align: left; padding-left: 14px; }
+thead th.m1-h { background: #e8edff; color: #1a2ea0; }
+thead th.m2-h { background: #ece8ff; color: #5a1a9e; }
+thead th.m3-h { background: #fff0eb; color: #9e3a1a; }
+
+tbody td {
+  padding: 11px 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13.5px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+tbody td.align-left { text-align: left; padding-left: 14px; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background .14s; }
+tbody tr:hover { background: rgba(255,255,255,0.05); }
+
+.rank-cell  { font-weight: 800; color: var(--muted); font-size: 15px; }
+.team-cell  { font-weight: 800; font-size: 14px; }
+.total-cell { font-weight: 900; font-size: 16px; color: #fff; }
+
+tr.gold   .rank-cell { color: var(--gold); }
+tr.silver .rank-cell { color: var(--silver); }
+tr.bronze .rank-cell { color: var(--bronze); }
+
+.m1-place, .m1-kills, .m1-tot { background: rgba(59,91,255,.05); }
+.m2-place, .m2-kills, .m2-tot { background: rgba(162,89,255,.05); }
+.m3-place, .m3-kills, .m3-tot { background: rgba(255,107,53,.05); }
+
+.sub-pts { font-size: 10px; color: var(--muted); display: block; margin-top: 1px; }
+
+.tie-badge {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--accent);
+  color: #fff;
+  padding: 1px 7px;
+  border-radius: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Match detail grids ── */
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.match-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.match-header {
+  padding: 10px 16px;
+  font-weight: 800;
+  font-size: 13.5px;
+  letter-spacing: 1px;
+}
+.m1-header { background: var(--m1); }
+.m2-header { background: var(--m2); }
+.m3-header { background: var(--m3); }
+
+.match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  transition: background .14s;
+}
+.match-row:hover { background: rgba(255,255,255,0.04); }
+.match-row:last-child { border-bottom: none; }
+.match-rank { color: var(--muted); font-weight: 700; min-width: 28px; }
+.match-rank.r1 { color: var(--gold); }
+.match-rank.r2 { color: var(--silver); }
+.match-rank.r3 { color: var(--bronze); }
+.match-name  { flex: 1; font-weight: 700; padding: 0 10px; }
+.match-kills { color: #e2e6ff; min-width: 48px; text-align: right; font-size: 12.5px; }
+.match-total { font-weight: 800; min-width: 42px; text-align: right; }
+
+/* ── Note ── */
+.note { color: var(--muted); font-size: 12.5px; margin-top: 12px; line-height: 1.7; }
+
+/* ── Footer ── */
+footer { text-align: center; margin-top: 56px; color: var(--muted); font-size: 12.5px; line-height: 1.8; }
+
+@media(max-width: 640px) {
+  .match-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">IT E-SPORT 2026 · MATCH RESULTS</div>
+    <h1>Match Leaderboard</h1>
+    <div class="header-sub" id="header-sub">คะแนนรวม 3 แมตช์ — Placement Points + Kill Points</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-combined" onclick="switchTab('combined')">🏆 รวม 3 แมตช์</button>
+    <button class="tab-btn m1" id="tab-m1" onclick="switchTab('m1')">Match 1</button>
+    <button class="tab-btn m2" id="tab-m2" onclick="switchTab('m2')">Match 2</button>
+    <button class="tab-btn m3" id="tab-m3" onclick="switchTab('m3')">Match 3</button>
+  </div>
+
+  <div class="podium" id="podium"></div>
+
+  <!-- Combined view -->
+  <div id="view-combined">
+    <div class="section-title" id="table-title">ตารางคะแนนรวม (Match 1 + Match 2 + Match 3)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2">RANK</th>
+            <th rowspan="2" class="align-left">TEAM</th>
+            <th colspan="3" class="m1-h">Match 1</th>
+            <th colspan="3" class="m2-h">Match 2</th>
+            <th colspan="3" class="m3-h">Match 3</th>
+            <th rowspan="2">KILLS<br>รวม</th>
+            <th rowspan="2">GRAND<br>TOTAL</th>
+          </tr>
+          <tr>
+            <th class="m1-h">PLACE</th><th class="m1-h">KILLS</th><th class="m1-h">PTS</th>
+            <th class="m2-h">PLACE</th><th class="m2-h">KILLS</th><th class="m2-h">PTS</th>
+            <th class="m3-h">PLACE</th><th class="m3-h">KILLS</th><th class="m3-h">PTS</th>
+          </tr>
+        </thead>
+        <tbody id="combined-body"></tbody>
+      </table>
+    </div>
+    <p class="note">
+      * <b>GRAND TOTAL</b> = Placement Points + Kill Points รวมทั้ง 3 แมตช์<br>
+      * คะแนนอันดับ: #1=10, #2=6, #3=5, #4=4, #5=3, #6=2, #7-8=1, #9+=0 คะแนน<br>
+      * Tie-breaker: Kill Points รวมมากกว่าจะได้อันดับดีกว่า
+    </p>
+  </div>
+
+  <!-- Per-match views -->
+  <div id="view-m1" style="display:none">
+    <div class="section-title">ผล Match 1</div>
+    <div class="match-grid" id="m1-grid"></div>
+  </div>
+  <div id="view-m2" style="display:none">
+    <div class="section-title">ผล Match 2</div>
+    <div class="match-grid" id="m2-grid"></div>
+  </div>
+  <div id="view-m3" style="display:none">
+    <div class="section-title">ผล Match 3</div>
+    <div class="match-grid" id="m3-grid"></div>
+  </div>
+
+  <footer>
+    IT E-SPORT 2026 · สรุปคะแนนจากภาพ "ผลของแมตช์" Match 1, 2 และ 3
+  </footer>
+</div>
+
+<script>
+/* ── Placement scoring ── */
+function pp(rank) {
+  if (rank === 1) return 10;
+  if (rank === 2) return 6;
+  if (rank === 3) return 5;
+  if (rank === 4) return 4;
+  if (rank === 5) return 3;
+  if (rank === 6) return 2;
+  if (rank <= 8)  return 1;
+  return 0;
+}
+
+/* ── Raw match data ── */
+const match1 = [
+  { rank:1,  team:9,  kills:23 },
+  { rank:2,  team:2,  kills:9  },
+  { rank:3,  team:5,  kills:6  },
+  { rank:4,  team:15, kills:4  },
+  { rank:5,  team:7,  kills:0  },
+  { rank:6,  team:3,  kills:3  },
+  { rank:7,  team:10, kills:0  },
+  { rank:8,  team:8,  kills:4  },
+  { rank:9,  team:6,  kills:3  },
+  { rank:10, team:1,  kills:6  },
+  { rank:11, team:12, kills:0  },
+  { rank:12, team:14, kills:1  },
+  { rank:13, team:13, kills:1  },
+  { rank:14, team:11, kills:0  },
+  { rank:15, team:4,  kills:2  },
+  { rank:16, team:16, kills:3  },
+];
+
+const match2 = [
+  { rank:1,  team:9,  kills:17 },
+  { rank:2,  team:2,  kills:7  },
+  { rank:3,  team:11, kills:7  },
+  { rank:4,  team:16, kills:8  },
+  { rank:5,  team:7,  kills:4  },
+  { rank:6,  team:10, kills:1  },
+  { rank:7,  team:4,  kills:2  },
+  { rank:8,  team:13, kills:3  },
+  { rank:9,  team:15, kills:2  },
+  { rank:10, team:5,  kills:2  },
+  { rank:11, team:8,  kills:4  },
+  { rank:12, team:1,  kills:0  },
+  { rank:13, team:14, kills:0  },
+  { rank:14, team:6,  kills:3  },
+  { rank:15, team:3,  kills:0  },
+  { rank:16, team:12, kills:3  },
+];
+
+const match3 = [
+  { rank:1,  team:2,  kills:10 },
+  { rank:2,  team:1,  kills:7  },
+  { rank:3,  team:6,  kills:2  },
+  { rank:4,  team:9,  kills:7  },
+  { rank:5,  team:8,  kills:8  },
+  { rank:6,  team:7,  kills:3  },
+  { rank:7,  team:5,  kills:1  },
+  { rank:8,  team:16, kills:8  },
+  { rank:9,  team:10, kills:1  },
+  { rank:10, team:3,  kills:8  },
+  { rank:11, team:12, kills:2  },
+  { rank:12, team:11, kills:0  },
+  { rank:13, team:15, kills:2  },
+  { rank:14, team:13, kills:1  },
+  { rank:15, team:14, kills:1  },
+  { rank:16, team:4,  kills:0  },
+];
+
+const MATCHES = [match1, match2, match3];
+
+/* ── Build combined dataset ── */
+function buildCombined() {
+  const teams = {};
+  const init = () => ({ rank:0, kills:0, place:0, total:0 });
+
+  MATCHES.forEach((match, mi) => {
+    const key = `m${mi+1}`;
+    match.forEach(r => {
+      if (!teams[r.team]) teams[r.team] = { id: r.team, m1:init(), m2:init(), m3:init() };
+      const placePts = pp(r.rank);
+      teams[r.team][key] = { rank: r.rank, kills: r.kills, place: placePts, total: placePts + r.kills };
+    });
+  });
+
+  return Object.values(teams).map(t => ({
+    ...t,
+    totalKills: t.m1.kills + t.m2.kills + t.m3.kills,
+    totalPlace: t.m1.place + t.m2.place + t.m3.place,
+    grand:      t.m1.total + t.m2.total + t.m3.total,
+  })).sort((a, b) => b.grand - a.grand || b.totalKills - a.totalKills);
+}
+
+const combined = buildCombined();
+
+/* ── Render podium ── */
+function renderPodium(items) {
+  const order = [
+    { d: items[1], cls: 'silver', label: '🥈 อันดับ 2' },
+    { d: items[0], cls: 'gold',   label: '🏆 อันดับ 1' },
+    { d: items[2], cls: 'bronze', label: '🥉 อันดับ 3' },
+  ];
+  document.getElementById('podium').innerHTML = order.map(({ d, cls, label }) => `
+    <div class="p-card ${cls}">
+      <div class="p-rank">${label}</div>
+      <div class="p-name">ทีม ${d.id}</div>
+      <div class="p-pts">${d.grand}</div>
+      <div class="p-sub">คะแนนรวม · Kill ${d.totalKills}</div>
+    </div>
+  `).join('');
+}
+
+/* ── Render combined table ── */
+function renderCombined() {
+  renderPodium(combined);
+  const tbody = document.getElementById('combined-body');
+  tbody.innerHTML = '';
+  combined.forEach((d, i) => {
+    const rank = i + 1;
+    const cls  = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+    const isTie = i > 0 && combined[i-1].grand === d.grand && combined[i-1].totalKills !== d.totalKills;
+    const tieTag = isTie ? `<span class="tie-badge">Tie-break</span>` : '';
+    const fRank = r => r ? `#${r.rank}<br><span class="sub-pts">${r.place} pts</span>` : '—';
+
+    const tr = document.createElement('tr');
+    if (cls) tr.className = cls;
+    tr.innerHTML = `
+      <td class="rank-cell">${rank}</td>
+      <td class="team-cell align-left">ทีม ${d.id}${tieTag}</td>
+      <td class="m1-place">${fRank(d.m1)}</td>
+      <td class="m1-kills">${d.m1.kills}</td>
+      <td class="m1-tot" style="font-weight:700">${d.m1.total}</td>
+      <td class="m2-place">${fRank(d.m2)}</td>
+      <td class="m2-kills">${d.m2.kills}</td>
+      <td class="m2-tot" style="font-weight:700">${d.m2.total}</td>
+      <td class="m3-place">${fRank(d.m3)}</td>
+      <td class="m3-kills">${d.m3.kills}</td>
+      <td class="m3-tot" style="font-weight:700">${d.m3.total}</td>
+      <td style="color:var(--gold);font-weight:700">${d.totalKills}</td>
+      <td class="total-cell">${d.grand}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ── Render per-match grid ── */
+function renderMatchGrid(matchData, containerId, headerCls) {
+  const sorted = [...matchData].sort((a, b) => a.rank - b.rank);
+  const colL = sorted.slice(0, 8);
+  const colR = sorted.slice(8);
+
+  function rows(arr) {
+    return arr.map(r => {
+      const pts = pp(r.rank);
+      const total = pts + r.kills;
+      const rc = r.rank <= 3 ? `r${r.rank}` : '';
+      return `<div class="match-row">
+        <span class="match-rank ${rc}">#${r.rank}</span>
+        <span class="match-name">ทีม ${r.team}</span>
+        <span class="match-kills">${r.kills} kills</span>
+        <span class="match-total" style="color:var(--gold)">${total} pts</span>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById(containerId).innerHTML = `
+    <div class="match-card">
+      <div class="match-header ${headerCls}">อันดับ #1 – #8</div>
+      ${rows(colL)}
+    </div>
+    <div class="match-card">
+      <div class="match-header ${headerCls}">อันดับ #9 – #16</div>
+      ${rows(colR)}
+    </div>
+  `;
+}
+
+/* ── Tab switching ── */
+const TABS = ['combined', 'm1', 'm2', 'm3'];
+
+function switchTab(tab) {
+  TABS.forEach(t => {
+    document.getElementById(`view-${t}`).style.display = t === tab ? '' : 'none';
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+  });
+
+  // Per-match podium helpers
+  const makeTopFrom = (matchData) => {
+    const sorted = [...matchData].sort((a, b) => a.rank - b.rank);
+    return sorted.slice(0, 3).map(r => ({
+      id: r.team,
+      grand: pp(r.rank) + r.kills,
+      totalKills: r.kills,
+    }));
+  };
+
+  if (tab === 'combined') renderPodium(combined);
+  if (tab === 'm1') { renderMatchGrid(match1, 'm1-grid', 'm1-header'); renderPodium(makeTopFrom(match1)); }
+  if (tab === 'm2') { renderMatchGrid(match2, 'm2-grid', 'm2-header'); renderPodium(makeTopFrom(match2)); }
+  if (tab === 'm3') { renderMatchGrid(match3, 'm3-grid', 'm3-header'); renderPodium(makeTopFrom(match3)); }
+}
+
+/* ── Init ── */
+renderCombined();
+</script>
+</body>
+</html>
