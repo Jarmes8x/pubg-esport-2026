@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Players — IT E-SPORT 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06081a; --card:rgba(255,255,255,0.03); --card2:rgba(255,255,255,0.05);
+  --accent:#3b5bff; --glow:rgba(59,91,255,0.3);
+  --gold:#ffd447; --silver:#cfd8ff; --bronze:#e5a35a;
+  --line:rgba(255,255,255,0.08); --muted:#8b94c4; --r:10px;
+  --m1:#3b5bff; --m2:#a259ff; --m3:#ff6b35;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter','Noto Sans Thai',system-ui,sans-serif;
+  background:radial-gradient(ellipse 80% 60% at 10% -10%,#1a2870 0%,transparent 60%),
+  radial-gradient(ellipse 60% 40% at 90% 100%,#0d1650 0%,transparent 60%),var(--bg);
+  color:#fff;min-height:100vh;padding:0 16px 72px;}
+
+/* Nav */
+nav.top-nav{background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:0;padding:0 20px;}
+.nav-logo{font-weight:900;font-size:14px;letter-spacing:1px;color:#fff;
+  padding:14px 0;margin-right:20px;white-space:nowrap;}
+.nav-link{display:block;padding:14px 16px;font-size:13px;font-weight:700;
+  color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;}
+.nav-link:hover{color:#fff;}
+.nav-link.active{color:#fff;border-bottom-color:var(--accent);}
+
+.wrap{max-width:1100px;margin:0 auto;padding-top:36px;}
+header{text-align:center;margin-bottom:32px;}
+.badge{display:inline-block;background:#fff;color:#06081a;font-size:11.5px;
+  font-weight:800;letter-spacing:1.5px;padding:4px 16px;border-radius:4px;
+  margin-bottom:12px;text-transform:uppercase;}
+h1{font-size:clamp(26px,5vw,44px);font-weight:900;letter-spacing:1px;
+  text-transform:uppercase;
+  background:linear-gradient(100deg,#fff 30%,#7b93ff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;}
+.header-sub{color:var(--muted);font-size:14px;}
+
+/* Section title */
+.section-title{display:flex;align-items:center;gap:10px;font-size:16px;
+  font-weight:800;color:#cfd6ff;margin:0 0 16px;}
+.section-title::before{content:"";display:inline-block;width:5px;height:20px;
+  background:var(--accent);border-radius:3px;flex-shrink:0;}
+
+/* Top players table */
+.table-wrap{overflow-x:auto;margin-bottom:48px;}
+table{width:100%;min-width:620px;border-collapse:collapse;background:var(--card);
+  border-radius:var(--r);overflow:hidden;border:1px solid var(--line);}
+thead th{background:#fff;color:#06081a;text-align:center;padding:11px 8px;
+  font-size:11.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;}
+thead th.al{text-align:left;padding-left:14px;}
+.m1h{background:#e8edff;color:#1a2ea0;}
+.m2h{background:#ece8ff;color:#5a1a9e;}
+.m3h{background:#fff0eb;color:#9e3a1a;}
+tbody td{padding:11px 8px;border-bottom:1px solid var(--line);font-size:13px;
+  text-align:center;font-variant-numeric:tabular-nums;}
+tbody td.al{text-align:left;padding-left:14px;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr{transition:background .14s;}
+tbody tr:hover{background:rgba(255,255,255,0.05);}
+.rank-cell{font-weight:800;color:var(--muted);font-size:14px;}
+tr.r1 .rank-cell{color:var(--gold);}
+tr.r2 .rank-cell{color:var(--silver);}
+tr.r3 .rank-cell{color:var(--bronze);}
+.player-cell{font-weight:700;font-size:13.5px;}
+.team-tag{display:inline-block;font-size:10px;background:rgba(255,255,255,0.08);
+  color:#a9b8ff;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;font-weight:600;}
+.total-k{font-weight:900;font-size:15px;color:var(--gold);}
+.k-m1{color:#7b93ff;} .k-m2{color:#c299ff;} .k-m3{color:#ff9a6c;}
+
+/* Filter bar */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center;}
+.filter-label{font-size:12.5px;font-weight:700;color:var(--muted);}
+.filter-btn{background:rgba(255,255,255,0.04);border:1px solid var(--line);color:#c0c8f0;
+  font-family:inherit;font-size:12px;font-weight:700;padding:7px 14px;border-radius:6px;
+  cursor:pointer;transition:all .15s;}
+.filter-btn:hover{background:rgba(255,255,255,0.09);}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;
+  box-shadow:0 2px 10px var(--glow);}
+
+/* Team cards */
+.teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+.team-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  transition:border-color .2s;}
+.team-card:hover{border-color:rgba(59,91,255,.35);}
+.tc-header{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;background:rgba(59,91,255,.1);border-bottom:1px solid var(--line);}
+.tc-seed{font-size:12px;color:var(--muted);font-weight:700;}
+.tc-name{font-size:15px;font-weight:800;}
+.tc-total{font-size:20px;font-weight:900;color:var(--gold);}
+.tc-sub{font-size:10.5px;color:var(--muted);}
+
+.player-row{display:flex;align-items:center;padding:10px 18px;
+  border-bottom:1px solid var(--line);}
+.player-row:last-child{border-bottom:none;}
+.pr-name{flex:1;font-size:13px;font-weight:600;}
+.pr-kills{display:flex;gap:8px;align-items:center;}
+.pk{display:flex;flex-direction:column;align-items:center;min-width:30px;}
+.pk-label{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.5px;margin-bottom:1px;}
+.pk-val{font-size:14px;font-weight:800;}
+.pk-m1 .pk-val{color:#7b93ff;}
+.pk-m2 .pk-val{color:#c299ff;}
+.pk-m3 .pk-val{color:#ff9a6c;}
+.pk-tot .pk-val{color:var(--gold);}
+.pr-sep{width:1px;height:28px;background:var(--line);}
+
+.note{color:var(--muted);font-size:12px;margin-top:12px;line-height:1.7;}
+footer{text-align:center;margin-top:56px;color:var(--muted);font-size:12px;line-height:1.8;}
+
+@media(max-width:640px){
+  .teams-grid{grid-template-columns:1fr;}
+  table{min-width:500px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="nav-logo">⚡ IT E-SPORT 2026</span>
+  <a href="match-results.html" class="nav-link">📊 Match Results</a>
+  <a href="players.html" class="nav-link active">👤 Players</a>
+</nav>
+
+<div class="wrap">
+  <header>
+    <div class="badge">IT E-SPORT 2026 · PLAYER STATS</div>
+    <h1>Player Kills</h1>
+    <div class="header-sub">สถิติคิลผู้เล่นแยกแมตช์ — Match 1, 2, 3</div>
+  </header>
+
+  <!-- Top killers table -->
+  <div class="section-title">🔫 Top Killers (ทุกผู้เล่นเรียงตาม Kill รวม)</div>
+  <div class="table-wrap">
+    <table id="player-table">
+      <thead>
+        <tr>
+          <th>RANK</th>
+          <th class="al">PLAYER</th>
+          <th class="al">TEAM</th>
+          <th class="m1h">M1</th>
+          <th class="m2h">M2</th>
+          <th class="m3h">M3</th>
+          <th>TOTAL KILLS</th>
+        </tr>
+      </thead>
+      <tbody id="player-body"></tbody>
+    </table>
+  </div>
+
+  <!-- Team filter -->
+  <div class="section-title">🏟️ รายชื่อผู้เล่นแยกทีม</div>
+  <div class="filter-bar">
+    <span class="filter-label">กรองทีม:</span>
+    <button class="filter-btn active" id="filter-all" onclick="filterTeam(0)">ทั้งหมด</button>
+    <div id="team-filters"></div>
+  </div>
+
+  <div class="teams-grid" id="teams-grid"></div>
+
+  <p class="note">* Kill แต่ละแมตช์มาจากภาพ "ผลของแมตช์" ที่แสดงคิลของผู้เล่นแต่ละคน</p>
+  <footer>IT E-SPORT 2026 · Player Stats · Match 1, 2, 3 · PUBG PC</footer>
+</div>
+
+<script src="team-data.js"></script>
+<script>
+/* ─── Build all-player flat list ─────────────────────────── */
+const allPlayers = [];
+Object.entries(ROSTERS).forEach(([tid, players]) => {
+  players.forEach(p => {
+    const total = p.kills.reduce((s,k)=>s+k,0);
+    allPlayers.push({ name:p.name, teamId:+tid, kills:p.kills, total });
+  });
+});
+allPlayers.sort((a,b)=>b.total-a.total||b.kills[0]-a.kills[0]);
+
+/* ─── Top killers table ──────────────────────────────────── */
+function renderPlayerTable(players) {
+  const tbody = document.getElementById('player-body');
+  tbody.innerHTML = '';
+  players.forEach((p, i) => {
+    const rank = i+1;
+    const cls  = rank===1?'r1':rank===2?'r2':rank===3?'r3':'';
+    const tr   = document.createElement('tr');
+    if(cls) tr.className = cls;
+    tr.innerHTML = `
+      <td class="rank-cell">${rank}</td>
+      <td class="player-cell al">${p.name}</td>
+      <td class="al"><span style="font-size:12.5px;color:#a9b8ff;font-weight:700">${teamName(p.teamId)}</span></td>
+      <td class="k-m1" style="font-weight:700">${p.kills[0]}</td>
+      <td class="k-m2" style="font-weight:700">${p.kills[1]}</td>
+      <td class="k-m3" style="font-weight:700">${p.kills[2]}</td>
+      <td class="total-k">${p.total}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ─── Team cards ─────────────────────────────────────────── */
+function renderTeamCards(filterTid) {
+  const grid = document.getElementById('teams-grid');
+  const ids = filterTid ? [filterTid] : Object.keys(ROSTERS).map(Number);
+
+  grid.innerHTML = ids.map(tid => {
+    const players = ROSTERS[tid];
+    const teamTotal = players.reduce((s,p)=>s+p.kills.reduce((a,k)=>a+k,0),0);
+
+    const playerRows = [...players]
+      .sort((a,b)=>b.kills.reduce((s,k)=>s+k,0)-a.kills.reduce((s,k)=>s+k,0))
+      .map(p => {
+        const tot = p.kills.reduce((s,k)=>s+k,0);
+        return `<div class="player-row">
+          <span class="pr-name">${p.name}</span>
+          <div class="pr-kills">
+            <div class="pk pk-m1"><span class="pk-label">M1</span><span class="pk-val">${p.kills[0]}</span></div>
+            <div class="pr-sep"></div>
+            <div class="pk pk-m2"><span class="pk-label">M2</span><span class="pk-val">${p.kills[1]}</span></div>
+            <div class="pr-sep"></div>
+            <div class="pk pk-m3"><span class="pk-label">M3</span><span class="pk-val">${p.kills[2]}</span></div>
+            <div class="pr-sep"></div>
+            <div class="pk pk-tot"><span class="pk-label">TOT</span><span class="pk-val">${tot}</span></div>
+          </div>
+        </div>`;
+      }).join('');
+
+    return `<div class="team-card" data-team="${tid}">
+      <div class="tc-header">
+        <div>
+          <div class="tc-seed">#${tid}</div>
+          <div class="tc-name">${teamName(tid)}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="tc-total">${teamTotal}</div>
+          <div class="tc-sub">Total Kills</div>
+        </div>
+      </div>
+      ${playerRows}
+    </div>`;
+  }).join('');
+}
+
+/* ─── Filter buttons ─────────────────────────────────────── */
+function buildFilterBtns() {
+  const wrap = document.getElementById('team-filters');
+  wrap.innerHTML = Object.keys(ROSTERS).map(tid => `
+    <button class="filter-btn" id="filter-${tid}" onclick="filterTeam(${tid})">
+      ${teamName(+tid)}
+    </button>`).join('');
+}
+
+let activeFilter = 0;
+function filterTeam(tid) {
+  activeFilter = tid;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tid ? `filter-${tid}` : 'filter-all').classList.add('active');
+
+  const filtered = tid ? allPlayers.filter(p=>p.teamId===tid) : allPlayers;
+  renderPlayerTable(filtered);
+  renderTeamCards(tid);
+}
+
+/* ─── Init ───────────────────────────────────────────────── */
+buildFilterBtns();
+renderPlayerTable(allPlayers);
+renderTeamCards(0);
+</script>
+</body>
+</html>
